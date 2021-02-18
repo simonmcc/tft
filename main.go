@@ -21,15 +21,15 @@ const (
 
 	ansi = "[\u001B\u009B][[\\]()#;?]*(?:(?:(?:[a-zA-Z\\d]*(?:;[a-zA-Z\\d]*)*)?\u0007)|(?:(?:\\d{1,4}(?:;\\d{0,4})*)?[\\dA-PRZcf-ntqry=><~]))"
 
-	banner = `          
-    _______ _______ _______ 
+	banner = `
+    _______ _______ _______
    |\     /|\     /|\     /|
    | +---+ | +---+ | +---+ |
    | |   | | |   | | |   | |
    | |t  | | |f  | | |t  | |
    | +---+ | +---+ | +---+ |
    |/_____\|/_____\|/_____\| making it easy to do dumb stuff
-							
+
    `
 )
 
@@ -64,6 +64,7 @@ func main() {
 
 	patternPtr := flag.String("pattern", "*", "The pattern to filter the resources")
 	modePtr := flag.String("mode", "include", "Either 'exclude' or 'inlcude'")
+	prefixPtr := flag.String("prefix", "-target=", "prefix for target output, defaults to '-target=' for regular terraform, use -prefix='-t ' for tf-deploy.sh")
 	flag.Parse()
 
 	info, _ := os.Stdin.Stat()
@@ -128,14 +129,14 @@ func main() {
 			fmt.Println("\n\n \xF0\x9F\x99\x88 no matches found, do nothing ")
 		} else {
 			fmt.Print("\n\nterraform plan")
-			fmt.Println(strings.Join(matchingResources, " -target="))
+			fmt.Println(strings.Join(matchingResources, " "+*prefixPtr))
 		}
 	} else {
 		if len(nonMatchingResources) == 1 {
 			fmt.Println("\n\n \xF0\x9F\x99\x88 no matches found, do nothing ")
 		} else {
 			fmt.Print("\n\nterraform plan")
-			fmt.Println(strings.Join(nonMatchingResources, " -target="))
+			fmt.Println(strings.Join(nonMatchingResources, " "+*prefixPtr))
 		}
 	}
 	fmt.Print("\n")
